@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+METHOD='md5'
+usage() {
+    echo "Usage: cpsm [-m METHOD] filename [CHECKSUM]"
+    exit 1
+}
+
+[ $# -eq 0 ] && usage
+
+while getopts :m: OPTION
+do
+    case $OPTION in
+        m)
+            METHOD=$OPTARG
+            ;;
+        \?)
+            usage
+            ;;
+    esac
+done
+shift $(($OPTIND - 1))
+if [[ $# -eq 0 ]]; then
+    usage
+fi
+
+CKSM=$(openssl $METHOD $1 | awk '{print $2}')
+if [[ -z $2 ]];
+then
+    echo $CKSM
+    exit 0;
+fi
+
+if [[ $CKSM == $2 ]];
+then
+    echo 'Match!'
+else
+    echo 'Not Match!'
+fi
