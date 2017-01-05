@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+if [ -n "$1" ] ; then
+    EXEC=$1
+else
+    EXEC=pip
+fi
+
+$EXEC list --outdated --format=columns | awk 'NR > 2 {print $1}' | sudo -H xargs $EXEC install --upgrade
