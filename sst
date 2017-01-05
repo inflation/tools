@@ -1,1 +1,2 @@
+#!/usr/bin/env bash
 ssh $1 -t 'tmux -CC a'
