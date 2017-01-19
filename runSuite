@@ -1,0 +1,71 @@
+#!/bin/bash
+usage() {
+    echo "Usage: runSuite suitefile program" >&2
+    exit 1
+}
+
+if [ ${#} -ne 2 ]; then
+    usage
+fi
+
+IFS=$' \t\n' tests=($(cat $1))
+program=$(basename $2)
+programpath=$2
+
+if ! tmpdir=$(mktemp -qd "/tmp/$program.XXX"); then
+    echo "Cannot create temporary folder!" >&2
+    exit 1
+fi
+
+trap "rm -r $tmpdir" EXIT
+
+for test in ${tests[@]}; do
+    if ! tmpfile=$(mktemp -q "$tmpdir/$test.out.XXX"); then
+        echo "Cannot create temporary out file!" >&2
+        exit 1
+    fi
+
+    if ! tmperr=$(mktemp -q "$tmpdir/$test.err.XXX"); then
+        echo "Cannot create temporary err file!" >&2
+        exit 1
+    fi
+
+    if ! [ -f "$test.in" ]; then
+        echo "File $test.in is missing." >&2
+        exit 1
+    fi
+    if ! [ -f "$test.out" ]; then
+        echo "File $test.out is missing." >&2
+        exit 1
+    fi
+
+    if [ -f "$test.args" ]; then
+        IFS=$' \t\n' args=($(cat $test.args))
+    else
+        args=()
+    fi
+
+    if ! [ $(command -v $programpath) ]; then
+        programpath=./$2
+    fi
+
+    $programpath ${args[@]} <$test.in >$tmpfile 2>$tmperr
+
+    if [ $? -ne 0 ]; then
+        echo "Error:"
+        echo "$(cat $tmperr)"
+        exit 1
+    fi
+
+    if ! diff -q $test.out $tmpfile > /dev/null 2>&1; then
+        echo "Test failed: $test"
+        echo "Input:"
+        echo "$(cat $test.in)"
+        
+        echo "Expected:"
+        echo "$(cat $test.out)"
+
+        echo "Actual:"
+        echo "$(cat $tmpfile)"
+    fi
+done
