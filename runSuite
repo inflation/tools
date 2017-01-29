@@ -21,6 +21,10 @@ fi
 trap "rm -r $tmpdir" EXIT
 
 for test in ${tests[@]}; do
+    if [[ $test =~ ^#.* ]]; then
+        continue
+    fi
+
     if ! tmpfile=$(mktemp -q "$tmpdir/$test.out.XXX"); then
         echo "Cannot create temporary out file!" >&2
         exit 1
@@ -41,7 +45,7 @@ for test in ${tests[@]}; do
     fi
 
     if [ -f "$suitepath/$test.args" ]; then
-        IFS=$' \t\n' args=($(cat $test.args))
+        IFS=$' \t\n' args=($(cat $suitepath/$test.args))
     else
         args=()
     fi
