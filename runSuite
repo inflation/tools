@@ -9,6 +9,7 @@ if [ ${#} -ne 2 ]; then
 fi
 
 IFS=$' \t\n' tests=($(cat $1))
+suitepath=$(dirname $1)
 program=$(basename $2)
 programpath=$2
 
@@ -30,16 +31,16 @@ for test in ${tests[@]}; do
         exit 1
     fi
 
-    if ! [ -f "$test.in" ]; then
+    if ! [ -f "$suitepath/$test.in" ]; then
         echo "File $test.in is missing." >&2
         exit 1
     fi
-    if ! [ -f "$test.out" ]; then
+    if ! [ -f "$suitepath/$test.out" ]; then
         echo "File $test.out is missing." >&2
         exit 1
     fi
 
-    if [ -f "$test.args" ]; then
+    if [ -f "$suitepath/$test.args" ]; then
         IFS=$' \t\n' args=($(cat $test.args))
     else
         args=()
@@ -49,23 +50,24 @@ for test in ${tests[@]}; do
         programpath=./$2
     fi
 
-    $programpath ${args[@]} <$test.in >$tmpfile 2>$tmperr
+    $programpath ${args[@]} <$suitepath/$test.in >$tmpfile 2>$tmperr
 
     if [ $? -ne 0 ]; then
         echo "Error:"
+        echo "$(cat $tmpfile)"
         echo "$(cat $tmperr)"
         exit 1
     fi
 
-    if ! diff -q $test.out $tmpfile > /dev/null 2>&1; then
+    if ! diff -q $suitepath/$test.out $tmpfile &> /dev/null; then
         echo "Test failed: $test"
         echo "Input:"
-        echo "$(cat $test.in)"
-        
+        echo "$(cat $suitepath/$test.in)"
+
         echo "Expected:"
-        echo "$(cat $test.out)"
+        echo "$(cat -A $suitepath/$test.out)"
 
         echo "Actual:"
-        echo "$(cat $tmpfile)"
+        echo "$(cat -A $tmpfile)"
     fi
 done
