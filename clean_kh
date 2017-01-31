@@ -1,2 +1,2 @@
-#!/usr/bin/env bash
+#!/bin/bash
 sed -i '' 's/^.*compute.*\n//' ~/.ssh/known_hosts

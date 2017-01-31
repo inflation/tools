@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 METHOD='md5'
 usage() {
     echo "Usage: cpsm [-m METHOD] filename [CHECKSUM]"

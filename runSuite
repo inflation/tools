@@ -69,9 +69,10 @@ for test in ${tests[@]}; do
         echo "$(cat $suitepath/$test.in)"
 
         echo "Expected:"
-        echo "$(cat -A $suitepath/$test.out)"
+        echo "$(cat -evt $suitepath/$test.out)"
 
+        echo
         echo "Actual:"
-        echo "$(cat -A $tmpfile)"
+        echo "$(cat -evt $tmpfile)"
     fi
 done

@@ -1,8 +1,9 @@
-#!/usr/bin/env bash
-if [ -n "$1" ] ; then
-    EXEC=$1
-else
-    EXEC=pip
-fi
-
-$EXEC list --outdated --format=columns | awk 'NR > 2 {print $1}' | sudo -H xargs $EXEC install --upgrade
+#!/bin/bash
+excutables=( pip pip2 pip3 )
+for exec in ${excutables[@]}; do
+    if which -s $exec; then
+        $exec list --outdated --format=columns | 
+        awk 'NR > 2 {print $1}' | 
+        sudo -H xargs $exec install --upgrade
+    fi
+done
