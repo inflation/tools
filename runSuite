@@ -57,7 +57,7 @@ for test in ${tests[@]}; do
     $programpath ${args[@]} <$suitepath/$test.in >$tmpfile 2>$tmperr
 
     if [ $? -ne 0 ]; then
-        echo "Error:"
+        echo "Test $test Error:"
         echo "$(cat $tmpfile)"
         echo "$(cat $tmperr)"
         exit 1

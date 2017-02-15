@@ -1,0 +1,2 @@
+#!/bin/bash
+egrep $1 ~/Library/Rime/flypy_double.dict.yaml
