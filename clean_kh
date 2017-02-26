@@ -1,2 +1,2 @@
 #!/bin/bash
-sed -i '' 's/^.*compute.*\n//' ~/.ssh/known_hosts
+sed -i '' 's/^.*compute.*//' ~/.ssh/known_hosts
