@@ -1,2 +1,2 @@
 #!/bin/bash
-ssh $1 -t 'tmux -CC a'
+ssh -Y $1 -t 'tmux -CC a'

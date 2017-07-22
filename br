@@ -17,7 +17,7 @@ if ! programpath=$(mktemp "/tmp/$programname.XXX"); then
     exit 1
 fi
 
-clang++ -std=c++14 $1 -o $programpath
+clang++ -std=c++14 ${@:2} $1 -o $programpath
 shift
 $programpath $@
 

@@ -1,2 +1,3 @@
 #!/bin/bash
 sed -i '' 's/^.*compute.*//' ~/.ssh/known_hosts
+cat ~/.ssh/known_hosts
