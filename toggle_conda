@@ -1,0 +1,8 @@
+#!/usr/bin/env fish
+if string match -r 'anaconda' $fish_user_paths > /dev/null
+        set -U fish_user_paths (string replace -r ' .*?anaconda.*? ' $fish_user_paths)
+        echo "Conda off."
+else
+        set -U fish_user_paths ~/anaconda3/bin $fish_user_paths
+        echo "Conda on."
+end
