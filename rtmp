@@ -1,3 +1,0 @@
-#!/bin/bash
-
-docker run -it -d --name ps4-rtmp -p 1935:1935 -e STREAM_KEY=$STREAM_KEY nginx-rtmp:run

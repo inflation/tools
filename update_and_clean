@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+conda=$HOME/anaconda3/bin/conda
+
+brew upgrade
+brew cask upgrade
+brew cleanup -s
+
+$conda update --all -y
+$conda clean --all -y
+
+pip-upgrade
+
+gem update

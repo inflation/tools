@@ -1,9 +1,0 @@
-#!/bin/bash
-
-for f in $(find . -type f  -name "*.pdf")
-do
-    echo $f
-    pdf2ps $f ${f%.*}.ps
-    ps2pdf ${f%.*}.ps $f
-    rm -f ${f%.*}.ps
-done
