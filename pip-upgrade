@@ -1,8 +1,2 @@
 #!/bin/bash
-excutables=( pip pip2 pip3 )
-for exec in ${excutables[@]}; do
-    if which -s $exec; then
-        $exec list --outdated --format=freeze | cut -d= -f1 |
-        sudo -H xargs $exec install -U
-    fi
-done
+pip3 list --outdated --format=freeze | cut -d= -f1 | xargs -P8 pip3 install -U

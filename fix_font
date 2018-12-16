@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+
+import sys
+import re
+from tempfile import mkstemp
+from os import remove
+from shutil import move
+import multiprocessing
+
+import chardet
+
+replacement_table = {
+    # 宋体
+    "方正大标宋_GBK": "FZDaBiaoSong-B06",
+    "方正小标宋_GBK": "FZXiaoBiaoSong-B05",
+    "方正标雅宋_GBK": "FZYaSong-R-GBK",
+    "方正准雅宋_GBK": "FZYaSong-M-GBK",
+    "方正书宋_GBK": "FZShuSong-Z01",
+    "宋体": "FZNewShuSong-Z10",
+    "MingLiU": "FZNewShuSong-Z10",
+    "FOT-TsukuAOldMin Pr6N DB": "TsukuAOldMinPr6N-D",
+    # 黑体
+    "方正兰亭黑_GBK": "FZLanTingHei-R-GBK",
+    "方正兰亭准黑_GBK": "FZLanTingHei-M-GBK",
+    "方正兰亭粗黑_GBK": "FZLanTingHei-B-GBK",
+    "方正黑体_GBK": "FZHei-B01",
+    "方正大黑_GBK": "FZDaHei-B02",
+    "方正正准黑_GBK": "FZZhengHei-M-GBK",
+    "SimHei": "PingFangSC-Medium",
+    "黑体": "PingFangSC-Medium",
+    "微软雅黑": "PingFangSC-Medium",
+    "思源黑体 CN Medium": "PingFangSC-Medium",
+    "華康硬黑體W5": "DFYingHeiW5-B5",
+    "華康硬黑體W7": "DFYingHeiW7-B5",
+    "華康儷細黑": "DFLiHei-Lt",
+    "華康儷中黑": "DFLiHei-Md",
+    "華康儷粗黑": "DFLiHei-Bd",
+    "WenQuanYi Micro Hei": "PingFangSC-Medium",
+    "Open Sans Semibold": "PingFangSC-Semibold",
+    "Arial": "Helvetica Neue",
+    "Source Han Serif JP Medium": "Source Han Serif Medium",
+    "Source Han Sans JP Bold": "HiraginoSans-W7",
+    "Hiragino Sans GB W3": "HiraginoSansGB-W3",
+    "Hiragino Sans GB W6": "HiraginoSansGB-W6",
+    # 圆体
+    "方正兰亭圆_GBK": "FZLanTingYuan-R-GBK",
+    "方正准圆_GBK": "FZZhunYuan-M02",
+    "方正粗圆_GBK": "FZCuYuan-M03",
+    "幼圆": "FZLanTingYuan-R-GBK",
+    "華康儷粗圓(P)": "DFPLiYuan-Bd",
+    "華康中圓體(P)": "DFPYuanMedium-B5",
+    "華康中圓體": "DFYuanMedium-B5",
+    "華康中特圓體(P)": "DFPYuanMXBold-B5",
+    "華康中特圓體": "DFYuanMXBold-B5",
+    "華康粗圓體": "DFYuanBold-B5",
+    "腾祥嘉丽准粗圆GB18030": "Tensentype JiaLiZhunCuYuanGB18030 Bold",
+    "EPSON 太丸ゴシック体Ｂ": "EPSON Futoma Gothic B",
+    # 楷体
+    "方正行楷_GBK": "FZXingKai-S04",
+    "方正楷体_GBK": "FZKai-Z03",
+    "方正黄草_GBK": "FZHuangCao-S09",
+    "方正中倩_GBK": "FZZhongQian-M16",
+    "華康宗楷體W7(P)": "DFPZongKaiW7-B5",
+    "華康正顏楷體W5(P)": "DFPYanKaiW5-B5",
+    "華康特粗楷體": "DFKaiXBold-B5",
+    "華康超特楷體": "DFKaiSUBold-B5",
+    "華康楷書體W5": "DFKaiShuW5-B5",
+    "華康楷書體W7": "DFKaiShuW7-B5",
+    "華康行楷體W5(P)": "DFPXingKaiW5-B5",
+    "華康行楷體W5": "DFXingKaiW5-B5",
+    # 其他
+    "方正隶变_GBK": "FZLiBian-S02",
+    "方正字迹-童体毛笔字体": "FZZJ-TTMBFONT",
+    "方正水柱_GBK": "FZShuiZhu-M08",
+    "方正瘦金书_GBK": "FZShouJinShu-S10",
+    "方正少儿_GBK": "FZShaoEr-M11",
+    "方正流行体简体": "FZLiuXingTi-M26S",
+    "汉仪家书简": "HYJiaShuJ",
+    "汉仪秀英体简": "HYXiuYingJ",
+    "汉仪舒同体简": "HYShuTongJ",
+    "华文仿宋": "STFangsong",
+    "華康兒風體W3": "DFErW3-B5",
+    "華康布丁體(P)": "DFPPuDing-B5",
+    "華康布丁體W7(P)": "DFPPuDingW7-B5",
+    "華康布丁體W7": "DFPuDingW7-B5",
+    "華康巧風體W1(P)": "DFPQiaoW1-B5",
+    "華康娃娃體(P)": "DFPWaWa-B5",
+    "華康POP1體W7(P)": "DFPPOP1W7-B5",
+    "華康POP1體W7": "DFPOP1W7-B5",
+    "華康POP1體W9(P)": "DFPPOP1W9-B5",
+    "華康POP1體W9": "DFPOP1W9-B5",
+    "華康竹風體W4(P)": "DFPChuW4-B5",
+    "華康勘亭流": "DFKanTingLiu-B5",
+    "華康鋼筆體W2": "DFGangBiW2-B5",
+    "華康芸風體W3(P)": "DFPYunW3-B5",
+    "華康芸風體W3": "DFYunW3-B5",
+    "華康妙風體W2": "MMarkerHK-Bold",
+    "華康鐵線龍門W3(P)": "DFPTieXianW3-B5",
+    "華康隸書體W5": "DFLiShuW5-B5",
+    "華康隸書體W7": "DFLiShuW7-B5",
+    "華康皮皮體W5(P)": "DFPPiPiW5-B5",
+    "華康皮皮體W5": "DFPiPiW5-B5",
+    "華康采風體W3(P)": "DFPTsaiW3-B5",
+    "華康采風體W3": "DFTsaiW3-B5",
+    "華康流隸體W5(P)": "DFPLiuLiW5-B5",
+    "華康棒棒體W5(P)": "DFPBangBangW5-B5",
+    "華康歐陽詢體W5(P)": "DFPOYangXunW5-B5",
+    "華康歐陽詢體W5": "DFOYangXunW5-B5",
+    "華康少女文字W5(P)": "DFPGirlW5-B5",
+    "華康少女文字W5": "DFGirlW5-B5",
+    "華康少女文字W7(P)": "DFPGirlW7-B5",
+    "華康少女文字W7": "DFGirlW7-B5",
+    "华康少女文字W5(P)": "DFPShaoNvW5-GB",
+    "华康少女文字W5": "DFShaoNvW5-GB",
+    "华康勘亭流W9": "DFKanTingLiuW9-GB",
+    "华康娃娃体W5": "DFWaWaW5-GB",
+    "ＤＦブラッシュＲＤW12": "DFBrushRD-W12",
+    "手札体-简": "Hannotate SC Regular",
+    "恋文ペン字": "PenjiKoiBumi",
+}
+
+rep = dict((re.escape(k), v) for k, v in replacement_table.items())
+pattern = re.compile("|".join(rep.keys()))
+
+
+def fix_font(filename):
+    fh, abs_path = mkstemp()
+
+    rawdata = open(filename, 'rb').read()
+    codec = chardet.detect(rawdata)['encoding']
+
+    with open(filename, encoding=codec) as file, open(fh, 'w') as temp:
+        data = file.read()
+        data = pattern.sub(lambda m: rep[re.escape(m.group(0))], data)
+        temp.write(data)
+
+    remove(filename)
+    move(abs_path, filename)
+
+
+if __name__ == '__main__':
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as p:
+        p.map(fix_font, sys.argv[1:])
