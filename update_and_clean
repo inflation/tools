@@ -7,24 +7,22 @@ NC='\033[0m'
 conda=$HOME/anaconda3/bin/conda
 
 printf "\n${BLUE} * Upgrading Homebrew...${NC}\n\n"
-
 brew upgrade
 brew cask upgrade
 brew cleanup -s
 
 printf "\n${BLUE} * Upgrading Anaconda...${NC}\n\n"
-
 $conda update --all -y
 $conda clean --all -y
 
 printf "\n${BLUE} * Upgrading Python PIP...${NC}\n\n"
-
 pip-upgrade
 
 printf "\n${BLUE} * Upgrading Ruby Gem...${NC}\n\n"
-
 gem update
 
 printf "\n${BLUE} * Upgrading Node.js NPM...${NC}\n\n"
-
 npm -g update
+
+printf "\n${BLUE} * Upgrading Rust...${NC}\n\n"
+rustup update

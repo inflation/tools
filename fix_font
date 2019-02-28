@@ -9,12 +9,15 @@ import multiprocessing
 
 import chardet
 
-replacement_table = {
+REPLACEMENT_TABLE = {
     # 宋体
     "方正大标宋_GBK": "FZDaBiaoSong-B06",
     "方正小标宋_GBK": "FZXiaoBiaoSong-B05",
+    "方正细雅宋_GBK": "FZYaSong-L-GBK",
     "方正标雅宋_GBK": "FZYaSong-R-GBK",
     "方正准雅宋_GBK": "FZYaSong-M-GBK",
+    "方正中雅宋_GBK": "FZYaSong-DB-GBK",
+    "方正粗雅宋_GBK": "FZYaSong-B-GBK",
     "方正书宋_GBK": "FZShuSong-Z01",
     "宋体": "FZNewShuSong-Z10",
     "MingLiU": "FZNewShuSong-Z10",
@@ -22,6 +25,7 @@ replacement_table = {
     # 黑体
     "方正兰亭黑_GBK": "FZLanTingHei-R-GBK",
     "方正兰亭准黑_GBK": "FZLanTingHei-M-GBK",
+    "方正兰亭中黑_GBK": "Lantinghei SC Demibold",
     "方正兰亭粗黑_GBK": "FZLanTingHei-B-GBK",
     "方正黑体_GBK": "FZHei-B01",
     "方正大黑_GBK": "FZDaHei-B02",
@@ -75,6 +79,7 @@ replacement_table = {
     "方正瘦金书_GBK": "FZShouJinShu-S10",
     "方正少儿_GBK": "FZShaoEr-M11",
     "方正流行体简体": "FZLiuXingTi-M26S",
+    "方正综艺_GBK": "FZZongYi-M05",
     "汉仪家书简": "HYJiaShuJ",
     "汉仪秀英体简": "HYXiuYingJ",
     "汉仪舒同体简": "HYShuTongJ",
@@ -118,26 +123,25 @@ replacement_table = {
     "手札体-简": "Hannotate SC Regular",
     "恋文ペン字": "PenjiKoiBumi",
 }
-
-rep = dict((re.escape(k), v) for k, v in replacement_table.items())
-pattern = re.compile("|".join(rep.keys()))
+REP = dict((re.escape(k), v) for k, v in REPLACEMENT_TABLE.items())
+PATTERN = re.compile("|".join(REP.keys()))
 
 
 def fix_font(filename):
-    fh, abs_path = mkstemp()
+    file_handle, abs_path = mkstemp()
 
-    rawdata = open(filename, 'rb').read()
-    codec = chardet.detect(rawdata)['encoding']
+    rawdata = open(filename, "rb").read()
+    codec = chardet.detect(rawdata)["encoding"]
 
-    with open(filename, encoding=codec) as file, open(fh, 'w') as temp:
+    with open(filename, encoding=codec) as file, open(file_handle, "w") as temp:
         data = file.read()
-        data = pattern.sub(lambda m: rep[re.escape(m.group(0))], data)
+        data = PATTERN.sub(lambda m: REP[re.escape(m.group(0))], data)
         temp.write(data)
 
     remove(filename)
     move(abs_path, filename)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as p:
         p.map(fix_font, sys.argv[1:])
