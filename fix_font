@@ -10,6 +10,17 @@ import multiprocessing
 import chardet
 
 REPLACEMENT_TABLE = {
+    # 修正
+    "宋体": "FZNewShuSong-Z10",
+    "MingLiU": "FZNewShuSong-Z10",
+    "SimHei": "HYQiHei",
+    "黑体": "HYQiHei",
+    "微软雅黑": "HYQiHei",
+    "Microsoft YaHei UI": "HYQiHei",
+    "WenQuanYi Micro Hei": "HYQiHei",
+    "Open Sans Semibold": "HYQiHei",
+    "Arial": "Helvetica Neue",
+    "Droid Sans Fallback": "HYQiHei",
     # 宋体
     "方正大标宋_GBK": "FZDaBiaoSong-B06",
     "方正小标宋_GBK": "FZXiaoBiaoSong-B05",
@@ -19,10 +30,10 @@ REPLACEMENT_TABLE = {
     "方正中雅宋_GBK": "FZYaSong-DB-GBK",
     "方正粗雅宋_GBK": "FZYaSong-B-GBK",
     "方正书宋_GBK": "FZShuSong-Z01",
-    "宋体": "FZNewShuSong-Z10",
-    "MingLiU": "FZNewShuSong-Z10",
+    "方正宋一_GBK": "FZSongYi-Z13",
     "FOT-TsukuAOldMin Pr6N DB": "TsukuAOldMinPr6N-D",
     # 黑体
+    "方正兰亭细黑_GBK": "FZLanTingHei-L-GBK",
     "方正兰亭黑_GBK": "FZLanTingHei-R-GBK",
     "方正兰亭准黑_GBK": "FZLanTingHei-M-GBK",
     "方正兰亭中黑_GBK": "Lantinghei SC Demibold",
@@ -30,22 +41,14 @@ REPLACEMENT_TABLE = {
     "方正黑体_GBK": "FZHei-B01",
     "方正大黑_GBK": "FZDaHei-B02",
     "方正正准黑_GBK": "FZZhengHei-M-GBK",
-    "SimHei": "PingFangSC-Medium",
-    "黑体": "PingFangSC-Medium",
-    "微软雅黑": "PingFangSC-Medium",
-    "思源黑体 CN Medium": "PingFangSC-Medium",
     "華康硬黑體W5": "DFYingHeiW5-B5",
     "華康硬黑體W7": "DFYingHeiW7-B5",
     "華康儷細黑": "DFLiHei-Lt",
     "華康儷中黑": "DFLiHei-Md",
     "華康儷粗黑": "DFLiHei-Bd",
-    "WenQuanYi Micro Hei": "PingFangSC-Medium",
-    "Open Sans Semibold": "PingFangSC-Semibold",
-    "Arial": "Helvetica Neue",
-    "Source Han Serif JP Medium": "Source Han Serif Medium",
-    "Source Han Sans JP Bold": "HiraginoSans-W7",
     "Hiragino Sans GB W3": "HiraginoSansGB-W3",
     "Hiragino Sans GB W6": "HiraginoSansGB-W6",
+    "思源黑体 CN Medium": "Source Han Sans CN Medium",
     # 圆体
     "方正兰亭圆_GBK": "FZLanTingYuan-R-GBK",
     "方正准圆_GBK": "FZZhunYuan-M02",
@@ -60,6 +63,7 @@ REPLACEMENT_TABLE = {
     "腾祥嘉丽准粗圆GB18030": "Tensentype JiaLiZhunCuYuanGB18030 Bold",
     "EPSON 太丸ゴシック体Ｂ": "EPSON Futoma Gothic B",
     # 楷体
+    "楷体": "KaiTi",
     "方正行楷_GBK": "FZXingKai-S04",
     "方正楷体_GBK": "FZKai-Z03",
     "方正黄草_GBK": "FZHuangCao-S09",
@@ -72,6 +76,9 @@ REPLACEMENT_TABLE = {
     "華康楷書體W7": "DFKaiShuW7-B5",
     "華康行楷體W5(P)": "DFPXingKaiW5-B5",
     "華康行楷體W5": "DFXingKaiW5-B5",
+    "迷你简细行楷": "Jxixinkai",
+    # 行书
+    "EPSON 行書体Ｍ": "EPSON Gyosho M",
     # 其他
     "方正隶变_GBK": "FZLiBian-S02",
     "方正字迹-童体毛笔字体": "FZZJ-TTMBFONT",
@@ -111,6 +118,7 @@ REPLACEMENT_TABLE = {
     "華康棒棒體W5(P)": "DFPBangBangW5-B5",
     "華康歐陽詢體W5(P)": "DFPOYangXunW5-B5",
     "華康歐陽詢體W5": "DFOYangXunW5-B5",
+    "華康手札體W5P": "DFPHannotateW5-B5",
     "華康少女文字W5(P)": "DFPGirlW5-B5",
     "華康少女文字W5": "DFGirlW5-B5",
     "華康少女文字W7(P)": "DFPGirlW7-B5",
@@ -122,6 +130,7 @@ REPLACEMENT_TABLE = {
     "ＤＦブラッシュＲＤW12": "DFBrushRD-W12",
     "手札体-简": "Hannotate SC Regular",
     "恋文ペン字": "PenjiKoiBumi",
+    "【嵐】竹风体": "Ev - DFZhuFeng"
 }
 REP = dict((re.escape(k), v) for k, v in REPLACEMENT_TABLE.items())
 PATTERN = re.compile("|".join(REP.keys()))

@@ -9,6 +9,7 @@ conda=$HOME/anaconda3/bin/conda
 printf "\n${BLUE} * Upgrading Homebrew...${NC}\n\n"
 brew upgrade
 brew cask upgrade
+brew cleanup
 brew cleanup -s
 
 printf "\n${BLUE} * Upgrading Anaconda...${NC}\n\n"
@@ -26,3 +27,6 @@ npm -g update
 
 printf "\n${BLUE} * Upgrading Rust...${NC}\n\n"
 rustup update
+
+printf "\n${BLUE} * Upgrading TeX...${NC}\n\n"
+sudo tlmgr update --self --all
