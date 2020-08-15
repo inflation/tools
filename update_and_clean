@@ -4,7 +4,7 @@ set -e
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-conda=$HOME/anaconda3/bin/conda
+# conda=$HOME/anaconda3/bin/conda
 
 printf "\n${BLUE} * Upgrading Homebrew...${NC}\n\n"
 brew upgrade
@@ -12,9 +12,9 @@ brew cask upgrade
 brew cleanup
 brew cleanup -s
 
-printf "\n${BLUE} * Upgrading Anaconda...${NC}\n\n"
-$conda update --all -y
-$conda clean --all -y
+# printf "\n${BLUE} * Upgrading Anaconda...${NC}\n\n"
+# $conda update --all -y
+# $conda clean --all -y
 
 printf "\n${BLUE} * Upgrading Python PIP...${NC}\n\n"
 pip-upgrade
