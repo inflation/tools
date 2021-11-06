@@ -1,2 +1,0 @@
-#!/bin/bash
-awk "/^$1\t/"'{print $1,$2}' '/Users/inflation/Documents/落格输入法/星空键道6.2.txt' 

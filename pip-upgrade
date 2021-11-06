@@ -1,2 +1,0 @@
-#!/bin/bash
-pip3 list --outdated --format=freeze | cut -d= -f1 | xargs -P8 pip3 install -U
