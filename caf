@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+ffmpeg_pid=$(ps auwx | grep ffmpeg | grep -v grep | awk '{print $2}')
+
+if [ "$ffmpeg_pid" == "" ]; then
+  echo "Cannot find an ffmpeg pid!"
+  exit -1
+fi
+
+echo "Caffeinating while pid $ffmpeg_pid runs..."
+caffeinate -imsw $ffmpeg_pid

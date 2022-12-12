@@ -1,0 +1,7 @@
+#!/bin/bash
+
+clang --target=aarch64-linux-gnu \
+    --sysroot=/Volumes/CSP/x-tools/aarch64-linux-gnu/aarch64-linux-gnu/sysroot/ \
+    --gcc-toolchain=/Volumes/CSP/x-tools/aarch64-linux-gnu \
+    -fuse-ld=/opt/homebrew/bin/ld.mold \
+    "$@"

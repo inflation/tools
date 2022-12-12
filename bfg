@@ -1,3 +1,0 @@
-#!/bin/bash
-
-java -jar $HOME/.local/lib/bfg/bfg-1.13.jar $@

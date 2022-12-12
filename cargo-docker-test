@@ -1,0 +1,13 @@
+#!/bin/zsh
+
+export CC=/Volumes/CSP/x-tools/aarch64-linux-gnu/bin/aarch64-linux-gnu-gcc 
+
+cargo nextest archive \
+	--target=aarch64-unknown-linux-gnu \
+	--archive-file=target/aarch64-unknown-linux-gnu/test.tar.zst
+	
+docker run -it --rm \
+	-v "$PWD/target/aarch64-unknown-linux-gnu/test.tar.zst:/tmp/test.tar.zst" \
+	-v "$PWD:/app" \
+	-t docker-test \
+	"$@"
