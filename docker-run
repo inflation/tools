@@ -1,7 +1,13 @@
 #!/bin/bash
 
+TARGET=$(pwd -P)
+APP="$TARGET/$1"
+
+if [[ "$1" = /* ]]; then
+  APP=$1
+fi
+
 docker run \
-  --mount type=bind,source="$PWD",target=/app,readonly \
-  --mount type=bind,source=/Library/Apple/usr/libexec/oah/RosettaLinux,target=/mnt/rosetta,readonly \
+  --mount type=bind,source="$TARGET",target="$TARGET",readonly \
   --rm -t docker-run \
-  /app/"$1" "${@:2}"
+  "$APP" "${@:2}"

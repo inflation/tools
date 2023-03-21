@@ -1,6 +1,8 @@
 #!/bin/zsh
 
-export CC=/Volumes/CSP/x-tools/aarch64-linux-gnu/bin/aarch64-linux-gnu-gcc 
+export CC=clang
+export CFLAGS="--target=aarch64-unknown-linux-gnu \
+--sysroot=/Volumes/CrossCompile/aarch64-linux-gnu/sysroot"
 
 cargo nextest archive \
 	--target=aarch64-unknown-linux-gnu \

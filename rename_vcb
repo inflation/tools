@@ -1,4 +1,0 @@
-#!/usr/bin/env fish
-for f in **.{mkv,ass}
-  echo mv $f (string replace -r '\[.*?\] (.* \[\d+\])\[.*\]' '$1' $f)
-end
