@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x 
+set -euo pipefail
 
 # set the internal field spereator to line break, 
 # so that we can iterate easily over the verify-pack output

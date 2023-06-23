@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+
 [[ $(pbpaste) == $(shasum -a 256 "$@" | awk '{print $1}') ]] \
 && echo "$1" == "$(pbpaste)" $'\e[1;32mMATCHES\e[0m' && exit; \
 echo "$1" != "$(pbpaste)" $'\e[1;31mFAILED\e[0m' ; 

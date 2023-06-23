@@ -1,0 +1,4 @@
+#!/bin/bash
+set -euo pipefail
+
+curl -H "Authorization: Bearer 2b30c588485e22" "https://ipinfo.io/$1" | fx
